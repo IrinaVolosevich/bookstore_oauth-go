@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"bookstore_utils-go/rest_errors"
+	"github.com/IrinaVolosevich/bookstore_utils-go/rest_errors"
 	"encoding/json"
 	"fmt"
 	"github.com/mercadolibre/golang-restclient/rest"
