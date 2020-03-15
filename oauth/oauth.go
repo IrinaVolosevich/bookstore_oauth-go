@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"bookstore_oauth-go/oauth/error"
+	"bookstore_utils-go/rest_errors"
 	"encoding/json"
 	"fmt"
 	"github.com/mercadolibre/golang-restclient/rest"
@@ -12,9 +13,9 @@ import (
 )
 
 const (
-	headerXPublic = "X-Public"
-	headerXClient = "X-Client-Id"
-	headerXCallerId = "X-Caller-Id"
+	headerXPublic    = "X-Public"
+	headerXClient    = "X-Client-Id"
+	headerXCallerId  = "X-Caller-Id"
 	paramAccessToken = "access_token"
 )
 
@@ -36,9 +37,9 @@ var (
 )
 
 type accessToken struct {
-	Id string `json:"id"`
-	UserId int64 `json:"user_id"`
-	ClientId int64 `json:"client_id"`
+	Id       string `json:"id"`
+	UserId   int64  `json:"user_id"`
+	ClientId int64  `json:"client_id"`
 }
 
 func IsPublic(request *http.Request) bool {
@@ -51,7 +52,7 @@ func IsPublic(request *http.Request) bool {
 
 func GetCallerId(request *http.Request) int64 {
 	if request == nil {
-		return  0
+		return 0
 	}
 
 	callerId, err := strconv.ParseInt(request.Header.Get(headerXCallerId), 10, 64)
@@ -62,9 +63,9 @@ func GetCallerId(request *http.Request) int64 {
 	return callerId
 }
 
-func GetClientId(request *http.Request) int64  {
+func GetClientId(request *http.Request) int64 {
 	if request == nil {
-		return  0
+		return 0
 	}
 
 	clientId, err := strconv.ParseInt(request.Header.Get(headerXClient), 10, 64)
@@ -75,7 +76,7 @@ func GetClientId(request *http.Request) int64  {
 	return clientId
 }
 
-func AuthenticateRequest(request *http.Request) *errors.RestErr {
+func AuthenticateRequest(request *http.Request) *rest_errors.RestErr {
 	if request == nil {
 		return nil
 	}
@@ -86,7 +87,7 @@ func AuthenticateRequest(request *http.Request) *errors.RestErr {
 	if accessTokenId == "" {
 		return nil
 	}
-	
+
 	at, err := getAccessToken(accessTokenId)
 	if err != nil {
 		if err.Status == http.StatusNotFound {
@@ -94,14 +95,14 @@ func AuthenticateRequest(request *http.Request) *errors.RestErr {
 		}
 		return err
 	}
-	
+
 	request.Header.Add(headerXCallerId, fmt.Sprintf("%v", at.UserId))
 	request.Header.Add(headerXClient, fmt.Sprintf("%v", at.ClientId))
 
-	return  nil
+	return nil
 }
 
-func cleanRequest(request *http.Request)  {
+func cleanRequest(request *http.Request) {
 	if request == nil {
 		return
 	}

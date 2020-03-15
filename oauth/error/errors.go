@@ -1,8 +1,8 @@
 package errors
 
 import (
-"errors"
-"net/http"
+	"errors"
+	"net/http"
 )
 
 type RestErr struct {
